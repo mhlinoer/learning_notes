@@ -1,0 +1,12 @@
+线程的6种状态：
+1、new   新创建
+    Thread thread = new Thread()
+
+2、runnable  可运行
+    thread.start()
+
+3、blocked   被阻塞
+
+4、waiting  等待
+5、timed waiting 计时等待
+6、terminated    被终止
