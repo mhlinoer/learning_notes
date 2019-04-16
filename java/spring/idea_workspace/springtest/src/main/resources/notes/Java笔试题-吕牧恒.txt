@@ -1,0 +1,64 @@
+1、使用group by 和 having的场景
+    SQL:
+        select count(1) as cnt, player_id, goods_id from store_buy_log where created_time>='2019-01-01 00:00:00' group by player_id, goods_id  having cnt > 1
+    解释:
+        查找在2019年1月1日以来玩家购买同一商品的记录数大于1的
+
+2、获取信息不使用GET的原因
+    获取信息，要求幂等，get是满足的，但是post可能会创建新资源和修改资源，所以每次获取到的数据可能不同，这样就违背幂等性
+    同理put、delete也是一样
+
+3、解释脏读、幻读、不可重复读及Spring中设置不同隔离级别事务的方法
+    a、Mysql事务隔离级别分为4种：读未提交、读已提交、可重复读、串行化，InnoDB默认可重复读
+    b、脏读：A事务读取到了B事务未commit的数据，解决办法就是修改级别为读已提交
+    c、不可重复读：A事务读取到一条记录，B事务修改了这条记录，A事务这时再处理逻辑时数据就不相同了。出现在update、delete操作，解决办法就是修改为可重复读
+    d、幻读：比如A事务查询到符合某个条件的结果集，B事务添加了另外一些符合A事务中查询条件的记录，这时A事务再查询时就发现了两次查询不一致的结果。出现在insert操作。解决办法加锁
+
+4、如何实现一个分页功能
+    以Mybatis为例：
+    请求/users?page=2&rows=10
+    /**
+    *@params page 获取第几页数据
+    *@params rows 获取多少条
+    */
+    public void getUsersInfo(int page, int rows){
+        PlayerDao pd = new PlayerDao();
+        List<Player> players = pd.getPlayersForPage(page, rows);
+        for(Player p : players){
+            System.out.println(player.toString());
+        }
+    }
+
+    // 获取到查询结果集
+    public List<Player> getPlayersForPage(int page, int rows){
+        SqlSession session = MybatisUtil.getSession();
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put("startPage", (page-1) * rows);
+        map.put("pageRows", rows);
+        List<Player> result = session.selectList("PlayerMapper.getPlayersForPage", map);
+        session.close()
+        return result;
+    }
+    <!--查询语句-- >
+    <select id="getPlayersForPage" resultType="Player" parameterType="Map">
+            SELECT * FROM player limit #{startPage},#{pageRows}
+    </select>
+
+5、怎么实施Restful风格的架构设计及注意点
+    Restful是一种以标准的http协议处理接口的方式，
+    如何实施：以SpringMVC为例，a、restful需要json格式的返回数据，所以需要添加一些依赖包，
+    b、使用@PathVariable参数化url，/app/{*}，使用@RequestMapping约定请求的url和请求方式等等
+    c、根据请求需要返回不同的资源格式，比如说/app/help.html，可以使用ContentNegotiationManager，指定格式application/xml等等，规范url的操作。
+
+6、禁用cookie怎么保证正常使用
+    判断用户禁用cookie后，可以把sessionid放在请求体中传到服务端，我们现在的实现方式是会存储玩家的sessionid到redis缓存中，服务端根据这个sessionid依旧可以取到服务端的session数据
+
+7、不适合对数据库做读写分离的
+    读写分离基本上是解决数据库读性能瓶颈的
+    不适合的场景举例：日志系统，基本上纯写入操作，读取操作也只是在进行统计分析任务时进行。
+    特征：对并发要求不高、对一致性要求极高
+
+8、不适合微服务的
+    a、业务耦合程度很高，或者现有项目从纵向或者横向少有拆分空间的，具体拆分的话可以按照几个类：业务和数据关系紧密性、功能性、性能要求高等等方向为拆分的考量依据
+    b、单体应用不需要
+    c、人数比较少的开发组。。。
