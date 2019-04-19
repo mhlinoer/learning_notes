@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${status}">500</title>
+    <link href="/webjars/meterializescc/0.96.0/css/materialize.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="row">
+        <h1 class="text-center" th:text="${error}">NOT FOUND</h1>
+        <p class="center-block" th:text="${message}">This page is ERROR</p>
+    </div>
+</body>
+</html>

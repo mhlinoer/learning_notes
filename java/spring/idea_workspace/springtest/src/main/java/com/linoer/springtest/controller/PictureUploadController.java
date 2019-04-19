@@ -3,6 +3,7 @@ package com.linoer.springtest.controller;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLConnection;
 
 @Controller
 @RequestMapping("/up")
@@ -38,6 +41,13 @@ public class PictureUploadController {
         }
         logger.info("upload file is null !");
         return "failure";
+    }
+
+    @RequestMapping("/uploadedPicture")
+    public void getUploadPicture(HttpServletResponse response) throws IOException{
+        ClassPathResource classPathResource = new ClassPathResource("/images/anony.png");
+        response.setHeader("Content-Type", URLConnection.guessContentTypeFromName(classPathResource.getFilename()));
+        IOUtils.copy(classPathResource.getInputStream(), response.getOutputStream());
     }
 
     private static String getFileExtension(String name){
