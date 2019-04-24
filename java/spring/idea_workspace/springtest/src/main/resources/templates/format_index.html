@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <!--<script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>-->
+    <!--<script th:src="@{webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+           testBody();
+        });
+        function testBody() {
+            $.ajax("${pageContext.request.contextPath}/json/indexRequestBody", {
+                dataType:"json",
+                type:"post",
+                contentType: "application/json",
+                data:JSON.stringify({classId: 1001, className: "tom"}),
+                async: true,
+                success: function (data) {
+                    console.log(data);
+                    $("#id").html(data.name);
+                    $("#sex").html(data.sex);
+                },
+                error: function () {
+                    alert("error")
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <br>
+        <div class="alert alert-success">
+            Hello <strong>WebJars</strong>
+        </div>
+        <span id="name"></span><br>
+        <span id="sex"></span><br>
+    </div>
+</body>
+</html>

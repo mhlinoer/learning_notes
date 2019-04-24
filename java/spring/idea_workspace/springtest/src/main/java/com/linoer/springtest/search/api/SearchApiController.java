@@ -23,6 +23,4 @@ public class SearchApiController {
         logger.info("search type :" + searchType);
         return searchService.search(searchType);
     }
-
-
 }
