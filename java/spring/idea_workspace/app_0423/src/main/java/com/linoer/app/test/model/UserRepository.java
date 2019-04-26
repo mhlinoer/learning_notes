@@ -10,7 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class UserRepository {
-    private final Map<String, User> userMap = new ConcurrentHashMap<>();
+    private static Map<String, User> userMap = new ConcurrentHashMap<>();
+
+    static{
+        for (int i = 0; i < 10; i++) {
+            User u = new User();
+            u.setName("robot0" + i);
+            userMap.put("user" + i, u);
+        }
+    }
 
     public User save(String email, User user){
         user.setName(email);
@@ -22,6 +30,10 @@ public class UserRepository {
 
     public User findOne(String email){
         return userMap.get(email);
+    }
+
+    public User findOneByName(String name){
+        return userMap.get(name);
     }
 
     public List<User> findAll(){

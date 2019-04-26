@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <script src="/webjars/jquery/jquery.min.js"></script>
@@ -10,7 +10,7 @@
 <body>
     <div class="container"><br>
         <a href="#" class="close" data-dismiss="alert" aria-label="close">close</a>
-        Hello Json
+        Hello Json <div th:text="${test}"></div>
     </div>
 </body>
 </html>
