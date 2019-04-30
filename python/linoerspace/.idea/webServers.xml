@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6b2eb9f3-85f1-41cb-9d6e-7855ddb635d5" name="linoerspace" url="http://47.102.46.219">
+        <fileTransfer host="47.102.46.219" port="22" rootFolder="/mnt/web/python_web" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
